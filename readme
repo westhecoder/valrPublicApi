@@ -1,0 +1,9 @@
+
+# Valr Public API
+
+This is a Varl Public API clone.
+
+It has all tokens/coins traded at the valr platform
+It has all currency pairs traded at the valr platform
+It has amrket summary of the available or selected tokens at the platform
+It also has order types avaiable on each and every token on the platform.
