@@ -4,6 +4,8 @@ const pool = require('./db')
 const app = express()
 //app.use(express.json())
 
+
+
 //Get all currencies
 app.get('/currency', async(req, res) => {
     
@@ -16,10 +18,24 @@ app.get('/currency', async(req, res) => {
     }
 })
 
+//Get active currencies
+app.get('/currency/active', async(req, res) => {
+    
+    try {
+        const currencies = await pool.query(
+            'SELECT * FROM currencies WHERE isactive = true')
+        res.status(200).json(currencies.rows)
+       
+    } catch (err) {
+        console.log(err.message)
+    }
+})
+
 //Get all currency pairs
 app.get('/currency/pairs', async(req, res) => {
     try {
-        const currencyPairs = await pool.query('SELECT * FROM currencypairs')
+        const currencyPairs = await pool.query(
+            'SELECT symbol, basecurrency, quotecurrency, shortname, active FROM currencypairs')
         res.status(200).json(currencyPairs.rows)
     } catch (err) {
         console.log(err.message)
@@ -48,7 +64,7 @@ app.get('/currency/:pair/ordertypes', async(req, res) =>{
 
         res.status(200).json(orderTypes.rows)
     } catch (err) {
-        console.log(err.message)
+        console.log(err.message) 
     }
 })
 
@@ -65,14 +81,14 @@ app.get('/currency/marketsummary', async(req, res) => {
 //Get market Summary of a pair
 app.get('/currency/:pair/marketsummary', async(req, res) => {
 
-    const { pair } = req.params
+    const {pair} = req.params
+
+    console.log(req.params)
     
     try {
 
-        //Returning a logical error, column "currencypair" does not exist
-        //TODO: To fix the error
         const pairSummary = await pool.query(
-            'SELECT * FROM marketsummary WHERE askPrice = ($1)', [pair])
+            'SELECT * FROM marketsummary WHERE currencypair = ($1)', [pair])
 
         res.json(pairSummary.rows)
     } catch (err) {
@@ -86,6 +102,7 @@ app.use((req, res) => {
 
 const port = 3000
 const time = new Date().toLocaleTimeString()
+
 app.listen(port, () => {
     console.log(`Public API Server Started at port ${port} at ${time}`)
 })
