@@ -10,10 +10,12 @@
   "author": "westhecoder",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.2",
     "express": "^4.17.3",
     "nodemon": "^2.0.15",
     "pg": "^8.7.3",
-    "pino-http": "^6.6.0"
+    "pino-http": "^6.6.0",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "eslint": "^8.13.0",

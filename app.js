@@ -1,38 +1,51 @@
 const express = require('express')
 const pool = require('./db')
+const request = require('request');
+
 
 const app = express()
-//app.use(express.json())
+app.use(express.json())
 
 
 
 //Get all currencies
-app.get('/currency', async(req, res) => {
-    
-    try {
+app.get('/currency', async (req, res) => {
+
+    /* try {
         const currencies = await pool.query('SELECT * FROM currencies')
         res.status(200).json(currencies.rows)
        
     } catch (err) {
         console.log(err.message)
     }
+ */
+    const options = { method: 'GET', url: 'https://api.valr.com/v1/public/currencies' };
+
+    request(options, (error, response, body) => {
+        if (error) throw new Error(error);
+
+        const currencies = JSON.parse(body)
+        console.log(typeof (currencies))
+        res.send(currencies)
+    });
+
 })
 
 //Get active currencies
-app.get('/currency/active', async(req, res) => {
-    
+app.get('/currency/active', async (req, res) => {
+
     try {
         const currencies = await pool.query(
             'SELECT * FROM currencies WHERE isactive = true')
         res.status(200).json(currencies.rows)
-       
+
     } catch (err) {
         console.log(err.message)
     }
 })
 
 //Get all currency pairs
-app.get('/currency/pairs', async(req, res) => {
+app.get('/currency/pairs', async (req, res) => {
     try {
         const currencyPairs = await pool.query(
             'SELECT symbol, basecurrency, quotecurrency, shortname, active FROM currencypairs')
@@ -44,8 +57,8 @@ app.get('/currency/pairs', async(req, res) => {
 
 
 //Get all available order types
-app.get('/currency/ordertypes', async(req, res) =>{
-    
+app.get('/currency/ordertypes', async (req, res) => {
+
     try {
         const orderTypes = await pool.query('SELECT * FROM ordertypes')
         res.status(200).json(orderTypes.rows)
@@ -55,7 +68,7 @@ app.get('/currency/ordertypes', async(req, res) =>{
 })
 
 //Get order types of a pair
-app.get('/currency/:pair/ordertypes', async(req, res) =>{
+app.get('/currency/:pair/ordertypes', async (req, res) => {
     const { pair } = req.params
 
     try {
@@ -64,12 +77,12 @@ app.get('/currency/:pair/ordertypes', async(req, res) =>{
 
         res.status(200).json(orderTypes.rows)
     } catch (err) {
-        console.log(err.message) 
+        console.log(err.message)
     }
 })
 
 //Get market summary
-app.get('/currency/marketsummary', async(req, res) => {
+app.get('/currency/marketsummary', async (req, res) => {
     try {
         const marketSummary = await pool.query('SELECT * FROM marketsummary')
         res.status(200).json(marketSummary.rows)
@@ -79,12 +92,12 @@ app.get('/currency/marketsummary', async(req, res) => {
 })
 
 //Get market Summary of a pair
-app.get('/currency/:pair/marketsummary', async(req, res) => {
+app.get('/currency/:pair/marketsummary', async (req, res) => {
 
-    const {pair} = req.params
+    const { pair } = req.params
 
     console.log(req.params)
-    
+
     try {
 
         const pairSummary = await pool.query(

@@ -23,7 +23,7 @@ GET http://localhost:3000/currency/ordertypes
 ###
 
 //Get order types of a pair
-GET http://localhost:3000/currency/SOLZAR/ordertypes
+GET http://localhost:3000/currency/ETCETH/ordertypes
 
 ###
 
@@ -33,4 +33,4 @@ GET http://localhost:3000/currency/marketsummary
 ###
 
 //Get market summary of (BTCZAR) pair
-GET http://localhost:3000/currency/XEMBTC/marketsummary
+GET http://localhost:3000/currency/ETHBTC/marketsummary
